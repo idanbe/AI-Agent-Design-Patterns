@@ -34,6 +34,7 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 | 05 | [Self-Refine](agent_patterns/p05_self_refine/) | Self-correction | Same model drafts, critiques itself, refines until no issues | 4 | Polishing writing/code style; no external checker | Factual errors the model can't see; cost-sensitive |
 | 06 | [LLMCompiler](agent_patterns/p06_llm_compiler/) | Tool agent | Planner emits a task DAG; independent tool calls run in parallel | 2 | Many independent tool calls; latency matters | Strictly sequential tasks; side-effecting tools that need ordering |
 | 07 | [Prompt chaining](agent_patterns/p07_prompt_chaining/) | Workflow | Fixed sequence of LLM calls with code gates between them | 3 | Task splits into known steps; want checkable intermediates | Steps vary per input |
+| 08 | [Routing](agent_patterns/p08_routing/) | Workflow | Classify the input, send it to one specialized handler | 2 | Distinct input categories needing different prompts/models | Categories overlap; one prompt handles all well |
 
 \* LLM calls in the repo's mock example — a rough cost/latency signal.
 
