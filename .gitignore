@@ -3,3 +3,7 @@ __pycache__/
 .env
 .pytest_cache/
 .superpowers/
+
+# local-only: implementation plan and Claude Code skills
+docs/superpowers/
+.claude/
