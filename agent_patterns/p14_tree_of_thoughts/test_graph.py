@@ -29,3 +29,11 @@ def test_simple_matches_graph():
     s = run(EXAMPLE_INPUT, s_llm)
     assert s["solution"] == g["solution"]
     assert s_llm.calls == g_llm.calls
+
+
+import pytest  # noqa: E402
+
+
+@pytest.mark.parametrize("line", ["1. 10 - 4 = 6", "2) 10 - 4 = 6", "- 10 - 4 = 6", "* 10 - 4 = 6"])
+def test_apply_step_accepts_list_markers(line):
+    assert apply_step([4, 9, 10, 13], line) == {"nums": [9, 13, 6.0], "step": "10 - 4 = 6"}

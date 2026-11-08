@@ -31,3 +31,18 @@ def test_simple_matches_graph():
     assert s["response"] == g["response"]
     assert s["past_steps"] == g["past_steps"]
     assert s_llm.calls == g_llm.calls
+
+
+import pytest  # noqa: E402
+
+
+@pytest.mark.parametrize("last", ["FINAL:", ""])
+def test_empty_replanner_reply_ends_the_run_in_both_versions(last):
+    from agent_patterns.p03_plan_execute.simple import run
+    script = ["1. a", "r", last]
+    g_llm, s_llm = MockLLM(responses=script), MockLLM(responses=script)
+    g = build_graph(g_llm).invoke(EXAMPLE_INPUT)
+    s = run(EXAMPLE_INPUT, s_llm)
+    assert g["response"] and g["response"] == s["response"]
+    assert g["past_steps"] == s["past_steps"] == [("a", "r")]
+    assert g_llm.calls == s_llm.calls == 3

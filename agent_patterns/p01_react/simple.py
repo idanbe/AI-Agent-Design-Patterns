@@ -3,10 +3,9 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import SystemMessage, ToolMessage
 
 from agent_patterns.core import get_llm
-from agent_patterns.p01_react.graph import SYSTEM, TOOLS, mock_llm, EXAMPLE_INPUT
+from agent_patterns.p01_react.graph import SYSTEM, TOOLS, MAX_TURNS, STOP_ANSWER, mock_llm, EXAMPLE_INPUT
 
 TOOLS_BY_NAME = {t.name: t for t in TOOLS}
-MAX_TURNS = 10  # same job as LangGraph's recursion_limit
 
 
 def run(inputs: dict, llm: BaseChatModel | None = None) -> dict:
@@ -23,7 +22,7 @@ def run(inputs: dict, llm: BaseChatModel | None = None) -> dict:
             result = str(TOOLS_BY_NAME[call["name"]].invoke(call["args"]))
             observations.append(result)                  # observe
             messages.append(ToolMessage(result, tool_call_id=call["id"]))
-    return {"answer": "Stopped: turn limit reached.", "observations": observations}
+    return {"answer": STOP_ANSWER, "observations": observations}
 
 
 if __name__ == "__main__":

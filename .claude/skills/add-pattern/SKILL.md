@@ -12,10 +12,11 @@ Each pattern is one folder: `agent_patterns/pNN_snake/` with `__init__.py` (empt
 
 1. **Name it.** NN = number of existing `agent_patterns/pNN_*` folders + 1. Folder `pNN_snake_name`.
 2. **Research.** Find the paper (arXiv) or official doc. Check every link: `curl -sIL -o /dev/null -w "%{http_code}" <url>` must print `200`. Never invent a source.
-3. **Test first.** Create the folder and empty `__init__.py`, then `test_graph.py`: assert final state values and `llm.calls`, one test per parse fallback and per loop cap, plus `test_simple_matches_graph` (template below). Run `uv run pytest agent_patterns/pNN_x -q` and watch it fail.
+3. **Test first.** Create the folder and empty `__init__.py`, then `test_graph.py`: assert final state values and `llm.calls`, one test per parse fallback and per loop cap, plus `test_simple_matches_graph` (template below). Run every fallback/cap script through **both** `build_graph` and `simple.run` and assert they agree. Run `uv run pytest agent_patterns/pNN_x -q` and watch it fail.
 4. **`graph.py`** from the skeleton below. Rules:
    - Prompts are module-level `UPPER_CASE` strings with `.format()` fields that state the exact reply format.
    - Parsers never raise on unexpected model text — they fall back (documented).
+   - Parsers never return an empty string for a value a router checks (`text or "(empty reply)"`) — routing on `""` sends the graph down the wrong edge.
    - Every loop has a cap constant (`MAX_...`).
    - Never `eval`/`exec` model output.
    - Nodes are thin wrappers around module-level prompts, tools, parsers and helpers (so `simple.py` reuses them).

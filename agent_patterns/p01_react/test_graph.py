@@ -22,3 +22,16 @@ def test_simple_matches_graph():
     assert s["answer"] == g["messages"][-1].content
     assert s["observations"] == [m.content for m in g["messages"] if isinstance(m, ToolMessage)]
     assert s_llm.calls == g_llm.calls
+
+
+def test_endless_tool_calls_are_capped_in_both_versions():
+    from langchain_core.messages import AIMessage
+    from agent_patterns.core import MockLLM
+    from agent_patterns.p01_react.graph import MAX_TURNS, STOP_ANSWER
+    from agent_patterns.p01_react.simple import run
+    call = AIMessage("", tool_calls=[{"name": "search", "args": {"query": "x"}, "id": "c9"}])
+    g_llm, s_llm = MockLLM(responses=[call]), MockLLM(responses=[call])
+    g = build_graph(g_llm).invoke(EXAMPLE_INPUT, {"recursion_limit": 50})
+    s = run(EXAMPLE_INPUT, s_llm)
+    assert g["messages"][-1].content == s["answer"] == STOP_ANSWER
+    assert g_llm.calls == s_llm.calls == MAX_TURNS

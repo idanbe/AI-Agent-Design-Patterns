@@ -43,7 +43,8 @@ class MockLLM(BaseChatModel):
                 raise ValueError(f"MockLLM: no scripted reply for: {text[:80]}")
             reply = self.responses[self.i % len(self.responses)]
             self.i += 1
-        msg = reply if isinstance(reply, AIMessage) else AIMessage(reply)
+        # fresh object each time: a replayed object keeps its id, and add_messages would replace, not append
+        msg = reply.model_copy() if isinstance(reply, AIMessage) else AIMessage(reply)
         return ChatResult(generations=[ChatGeneration(message=msg)])
 
     def bind_tools(self, tools, **kwargs) -> "MockLLM":

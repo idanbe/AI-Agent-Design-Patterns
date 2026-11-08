@@ -22,7 +22,7 @@ flowchart TD
 1. The LLM gets the question plus everything seen so far.
 2. It either asks for a tool call (an *action*) or writes the final answer.
 3. The tool runs and its result (the *observation*) is added to the conversation.
-4. Back to step 1 — the LLM is called again after **every** observation.
+4. Back to step 1 — the LLM is called again after **every** observation, up to `MAX_TURNS = 10` turns.
 
 ## The LangGraph graph
 
@@ -50,7 +50,7 @@ graph TD;
 
 | Node | Role |
 |---|---|
-| `agent` | LLM with tools bound: returns a tool call or the final answer |
+| `agent` | LLM with tools bound: returns a tool call or the final answer; stops after `MAX_TURNS` |
 | `tools` | `ToolNode` runs the requested tools and appends their results |
 | `tools_condition` | edge: go to `tools` if the last message has tool calls, else end |
 
@@ -61,7 +61,7 @@ Code: [graph.py](graph.py)
 Same pattern in [simple.py](simple.py) — a `for` loop of about 15 lines.
 
 - For one agent with a couple of tools, the plain loop is perfectly fine.
-- The graph adds a per-step trace (`stream`), `ToolNode` error handling (a bad tool call becomes a message, not a crash) and `recursion_limit` as the loop guard.
+- The graph adds a per-step trace (`stream`) and `ToolNode` error handling: a bad tool call becomes a message, not a crash (the plain loop would raise).
 - Adding human approval before a tool runs later is one `interrupt` in the graph; in the plain loop you build it yourself.
 
 ## Run it
@@ -72,7 +72,7 @@ uv run python -m agent_patterns.p01_react.simple
 USE_OPENROUTER=1 uv run --env-file .env python -m agent_patterns.p01_react.graph
 ```
 
-LLM calls in the mock example: **3** (one per step, including the final answer). Guard the loop with `graph.invoke(x, {"recursion_limit": 10})`.
+LLM calls in the mock example: **3** (one per step, including the final answer). The loop is capped at `MAX_TURNS = 10` LLM turns in the `agent` node — LangGraph's own `recursion_limit` defaults to 10007 in langgraph 1.2, far too high to be the only guard.
 
 ## When to use
 

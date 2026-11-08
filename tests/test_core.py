@@ -77,3 +77,11 @@ def test_run_demo_prints_messages_readably(capsys):
     out = capsys.readouterr().out
     assert "ai → search({'query': 'x'})" in out and "ai: done" in out
     assert "additional_kwargs" not in out
+
+
+def test_mock_replays_fresh_message_objects():
+    # reusing one AIMessage object makes add_messages *replace* instead of append on replay
+    call = AIMessage("", tool_calls=[{"name": "search", "args": {"query": "x"}, "id": "z3"}])
+    llm = MockLLM(responses=[call])
+    first, second = llm.invoke("x"), llm.invoke("x")
+    assert first is not second and first.id != second.id

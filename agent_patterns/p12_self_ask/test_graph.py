@@ -29,3 +29,26 @@ def test_simple_matches_graph():
     for key in ("answer", "scratchpad"):
         assert s[key] == g[key], key
     assert s_llm.calls == g_llm.calls
+
+
+import pytest  # noqa: E402
+
+
+@pytest.mark.parametrize("reply", ["Follow up:", "", "So the final answer is:"])
+def test_empty_or_broken_reply_ends_with_an_answer_in_both_versions(reply):
+    from agent_patterns.p12_self_ask.simple import run
+    g_llm, s_llm = MockLLM(responses=[reply]), MockLLM(responses=[reply])
+    g = build_graph(g_llm).invoke(EXAMPLE_INPUT)
+    s = run(EXAMPLE_INPUT, s_llm)
+    assert g["answer"] and g["answer"] == s["answer"]
+    assert g_llm.calls == s_llm.calls == 1
+
+
+def test_empty_reply_after_a_follow_up_still_stops():
+    from agent_patterns.p12_self_ask.simple import run
+    script = dict(responses=["Follow up: q?"], by_keyword={"\nFollow up: q?": ""})
+    g_llm, s_llm = MockLLM(**script), MockLLM(**script)
+    g = build_graph(g_llm).invoke(EXAMPLE_INPUT, {"recursion_limit": 25})
+    s = run(EXAMPLE_INPUT, s_llm)
+    assert g["answer"] and g["answer"] == s["answer"]
+    assert g_llm.calls == s_llm.calls == 2

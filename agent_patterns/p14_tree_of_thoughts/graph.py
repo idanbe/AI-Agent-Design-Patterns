@@ -18,6 +18,7 @@ PROPOSE = ("Game of 24. Propose up to 3 next steps, one per line, as 'a op b = c
 EVALUATE = "Game of 24. Can these numbers reach 24? Answer sure, likely or impossible.\nRate: {nums}\n"
 
 STEP_RE = re.compile(r"^\s*(-?\d+(?:\.\d+)?)\s*([-+*/])\s*(-?\d+(?:\.\d+)?)\s*=\s*(-?\d+(?:\.\d+)?)")
+LIST_MARKER = re.compile(r"^\s*(?:\d+[.)]|[-*•])\s+")   # "1. ", "2) ", "- ", "* "
 OPS = {"+": lambda a, b: a + b, "-": lambda a, b: a - b, "*": lambda a, b: a * b, "/": lambda a, b: a / b}
 
 
@@ -34,7 +35,7 @@ def fmt(nums: list[float]) -> str:
 
 def apply_step(nums: list[float], line: str) -> dict | None:
     """Re-check one proposed step in code: both numbers must be available and the math must be right."""
-    m = STEP_RE.match(line)
+    m = STEP_RE.match(LIST_MARKER.sub("", line, count=1))
     if not m:
         return None
     a, op, b, claimed = float(m.group(1)), m.group(2), float(m.group(3)), float(m.group(4))

@@ -25,3 +25,10 @@ def test_simple_matches_graph():
     for key in ("draft", "grade", "attempts"):
         assert s[key] == g[key], key
     assert s_llm.calls == g_llm.calls
+
+
+def test_judge_reply_parsing_is_strict():
+    from agent_patterns.p11_evaluator_optimizer.graph import parse_grade
+    assert parse_grade("**PASS**")[0] == "pass"
+    assert parse_grade("pass.")[0] == "pass"
+    assert parse_grade("Passable, but the tone is cold") == ("fail", "Passable, but the tone is cold")

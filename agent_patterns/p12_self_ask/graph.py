@@ -10,6 +10,7 @@ MAX_HOPS = 4
 FOLLOW_UP = "Follow up:"
 FINAL = "So the final answer is:"
 LIMIT_ANSWER = "unknown (follow-up limit reached)"
+EMPTY_ANSWER = "unknown (empty reply)"
 
 ASK = """Answer the question by asking yourself simpler follow-up questions.
 Use exactly this format, one line at a time:
@@ -38,12 +39,16 @@ def search(question: str) -> str:
 
 
 def read_line(reply: str) -> tuple[str, str]:
-    """('answer', text) or ('follow_up', question). Text in neither format is taken as the answer."""
+    """('answer', text) or ('follow_up', question). Never returns an empty answer or question:
+    text in neither format is the answer, and an empty reply or empty follow-up ends the run."""
     if FINAL in reply:
-        return "answer", reply.split(FINAL, 1)[1].strip()
+        return "answer", reply.split(FINAL, 1)[1].strip() or EMPTY_ANSWER
     if FOLLOW_UP in reply:
-        return "follow_up", reply.split(FOLLOW_UP, 1)[1].strip().splitlines()[0].strip()
-    return "answer", reply.strip()
+        lines = reply.split(FOLLOW_UP, 1)[1].strip().splitlines()
+        if lines and lines[0].strip():
+            return "follow_up", lines[0].strip()
+        return "answer", EMPTY_ANSWER
+    return "answer", reply.strip() or EMPTY_ANSWER
 
 
 def mock_llm() -> MockLLM:

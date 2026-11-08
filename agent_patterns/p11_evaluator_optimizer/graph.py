@@ -1,4 +1,5 @@
 """11 · Evaluator-optimizer: a generator writes, a separate judge grades PASS/FAIL with feedback, loop until PASS."""
+import re
 from typing import TypedDict
 
 from langchain_core.language_models import BaseChatModel
@@ -35,7 +36,7 @@ def generate_prompt(task: str, feedback: str) -> str:
 def parse_grade(reply: str) -> tuple[str, str]:
     """(grade, feedback). Anything that isn't a clear PASS counts as a fail."""
     text = reply.strip()
-    if text.upper().startswith("PASS"):
+    if re.match(r"\W*PASS\b", text, re.I):          # "**PASS**" passes, "Passable, but..." does not
         return "pass", ""
     return "fail", text.split("FAIL:", 1)[1].strip() if "FAIL:" in text else text
 

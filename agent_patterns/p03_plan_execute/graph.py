@@ -9,6 +9,7 @@ from langgraph.graph import StateGraph, START, END
 from agent_patterns.core import MockLLM, get_llm, run_demo
 
 MAX_STEPS = 6
+EMPTY_RESPONSE = "(empty reply)"  # never route on an empty string
 
 PLANNER = """Make a short numbered plan for this objective, one step per line ("1. ...").
 
@@ -47,9 +48,9 @@ def done_text(past_steps: list[tuple[str, str]]) -> str:
 def replan(reply: str) -> dict:
     """FINAL: ends the run; a numbered list replaces the plan; anything else is taken as the answer."""
     if "FINAL:" in reply:
-        return {"response": reply.split("FINAL:", 1)[1].strip()}
+        return {"response": reply.split("FINAL:", 1)[1].strip() or EMPTY_RESPONSE}
     plan = parse_plan(reply)
-    return {"plan": plan} if plan else {"response": reply}
+    return {"plan": plan} if plan else {"response": reply.strip() or EMPTY_RESPONSE}
 
 
 def mock_llm() -> MockLLM:
