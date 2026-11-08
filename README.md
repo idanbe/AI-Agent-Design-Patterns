@@ -31,6 +31,7 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 | 02 | [ReWOO](agent_patterns/p02_rewoo/) | Tool agent | Plan every tool call once with #E variables, run them, then solve | 2 | Predictable multi-tool lookups; fewer tokens than ReAct | Later steps depend on surprises in earlier results |
 | 03 | [Plan-and-Execute](agent_patterns/p03_plan_execute/) | Tool agent | Planner writes steps, executor does one, replanner adjusts | 5 | Long multi-step tasks; strong planner + cheap executor | Short tasks (planning overhead); hard real-time |
 | 04 | [Reflexion](agent_patterns/p04_reflexion/) | Self-correction | Retry with verbal lessons learned from an external evaluator | 3 | You have a ground-truth check (tests, rules, env reward) | No reliable evaluator; one-shot tasks |
+| 05 | [Self-Refine](agent_patterns/p05_self_refine/) | Self-correction | Same model drafts, critiques itself, refines until no issues | 4 | Polishing writing/code style; no external checker | Factual errors the model can't see; cost-sensitive |
 
 \* LLM calls in the repo's mock example — a rough cost/latency signal.
 
