@@ -26,20 +26,20 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 
 | #   | Pattern                                                            | Family          | Idea                                                                     | LLM calls\* | Use when                                                   | Avoid when                                                         |
 | --- | ------------------------------------------------------------------ | --------------- | ------------------------------------------------------------------------ | ----------- | ---------------------------------------------------------- | ------------------------------------------------------------------ |
-| 01  | [ReAct](agent_patterns/p01_react/)                                 | Tool agent      | Think → act → observe loop, one LLM call per step                        | 3           | Steps unknown upfront; must react to tool results          | Fixed workflows; tight latency/cost budgets                        |
-| 02  | [ReWOO](agent_patterns/p02_rewoo/)                                 | Tool agent      | Plan every tool call once with #E variables, run them, then solve        | 2           | Predictable multi-tool lookups; fewer tokens than ReAct    | Later steps depend on surprises in earlier results                 |
-| 03  | [Plan-and-Execute](agent_patterns/p03_plan_execute/)               | Tool agent      | Planner writes steps, executor does one, replanner adjusts               | 5           | Long multi-step tasks; strong planner + cheap executor     | Short tasks (planning overhead); hard real-time                    |
-| 04  | [Reflexion](agent_patterns/p04_reflexion/)                         | Self-correction | Retry with verbal lessons learned from an external evaluator             | 3           | You have a ground-truth check (tests, rules, env reward)   | No reliable evaluator; one-shot tasks                              |
-| 05  | [Self-Refine](agent_patterns/p05_self_refine/)                     | Self-correction | Same model drafts, critiques itself, refines until no issues             | 4           | Polishing writing/code style; no external checker          | Factual errors the model can't see; cost-sensitive                 |
-| 06  | [LLMCompiler](agent_patterns/p06_llm_compiler/)                    | Tool agent      | Planner emits a task DAG; independent tool calls run in parallel         | 2           | Many independent tool calls; latency matters               | Strictly sequential tasks; side-effecting tools that need ordering |
-| 07  | [Prompt chaining](agent_patterns/p07_prompt_chaining/)             | Workflow        | Fixed sequence of LLM calls with code gates between them                 | 3           | Task splits into known steps; want checkable intermediates | Steps vary per input                                               |
-| 08  | [Routing](agent_patterns/p08_routing/)                             | Workflow        | Classify the input, send it to one specialized handler                   | 2           | Distinct input categories needing different prompts/models | Categories overlap; one prompt handles all well                    |
-| 09  | [Parallelization (map-reduce)](agent_patterns/p09_map_reduce/)     | Workflow        | Same LLM step on many inputs in parallel, then combine                   | 4           | Many independent chunks/docs; voting for confidence        | Items depend on each other; strict rate limits                     |
-| 10  | [Orchestrator-workers](agent_patterns/p10_orchestrator_workers/)   | Workflow        | LLM decides subtasks at runtime; workers run in parallel; results merged | 4           | Subtasks not known until you see the input                 | Fixed splits (use map-reduce); tiny tasks                          |
-| 11  | [Evaluator-optimizer](agent_patterns/p11_evaluator_optimizer/)     | Workflow        | Generator + separate judge loop until PASS                               | 4           | Clear quality rubric; iterating measurably helps           | No articulable criteria; first draft usually fine                  |
-| 12  | [Self-Ask](agent_patterns/p12_self_ask/)                           | Tool agent      | Model asks itself follow-up questions; search answers each               | 3           | Multi-hop factual questions                                | Single-hop questions; non-factual tasks                            |
-| 13  | [Chain-of-Verification](agent_patterns/p13_chain_of_verification/) | Self-correction | Draft, plan check questions, answer them independently, revise           | 6           | Cutting factual hallucinations in lists/long answers       | Creative tasks; latency-sensitive chat                             |
-| 14  | [Tree of Thoughts](agent_patterns/p14_tree_of_thoughts/)           | Search          | Branch into candidate thoughts, score, prune, search (BFS/beam)          | 10          | Puzzles/planning where partial steps can be scored         | Simple Q&A; no way to score intermediate steps                     |
+| 01  | [ReAct](agent_patterns/p01_react/README.md)                                 | Tool agent      | Think → act → observe loop, one LLM call per step                        | 3           | Steps unknown upfront; must react to tool results          | Fixed workflows; tight latency/cost budgets                        |
+| 02  | [ReWOO](agent_patterns/p02_rewoo/README.md)                                 | Tool agent      | Plan every tool call once with #E variables, run them, then solve        | 2           | Predictable multi-tool lookups; fewer tokens than ReAct    | Later steps depend on surprises in earlier results                 |
+| 03  | [Plan-and-Execute](agent_patterns/p03_plan_execute/README.md)               | Tool agent      | Planner writes steps, executor does one, replanner adjusts               | 5           | Long multi-step tasks; strong planner + cheap executor     | Short tasks (planning overhead); hard real-time                    |
+| 04  | [Reflexion](agent_patterns/p04_reflexion/README.md)                         | Self-correction | Retry with verbal lessons learned from an external evaluator             | 3           | You have a ground-truth check (tests, rules, env reward)   | No reliable evaluator; one-shot tasks                              |
+| 05  | [Self-Refine](agent_patterns/p05_self_refine/README.md)                     | Self-correction | Same model drafts, critiques itself, refines until no issues             | 4           | Polishing writing/code style; no external checker          | Factual errors the model can't see; cost-sensitive                 |
+| 06  | [LLMCompiler](agent_patterns/p06_llm_compiler/README.md)                    | Tool agent      | Planner emits a task DAG; independent tool calls run in parallel         | 2           | Many independent tool calls; latency matters               | Strictly sequential tasks; side-effecting tools that need ordering |
+| 07  | [Prompt chaining](agent_patterns/p07_prompt_chaining/README.md)             | Workflow        | Fixed sequence of LLM calls with code gates between them                 | 3           | Task splits into known steps; want checkable intermediates | Steps vary per input                                               |
+| 08  | [Routing](agent_patterns/p08_routing/README.md)                             | Workflow        | Classify the input, send it to one specialized handler                   | 2           | Distinct input categories needing different prompts/models | Categories overlap; one prompt handles all well                    |
+| 09  | [Parallelization (map-reduce)](agent_patterns/p09_map_reduce/README.md)     | Workflow        | Same LLM step on many inputs in parallel, then combine                   | 4           | Many independent chunks/docs; voting for confidence        | Items depend on each other; strict rate limits                     |
+| 10  | [Orchestrator-workers](agent_patterns/p10_orchestrator_workers/README.md)   | Workflow        | LLM decides subtasks at runtime; workers run in parallel; results merged | 4           | Subtasks not known until you see the input                 | Fixed splits (use map-reduce); tiny tasks                          |
+| 11  | [Evaluator-optimizer](agent_patterns/p11_evaluator_optimizer/README.md)     | Workflow        | Generator + separate judge loop until PASS                               | 4           | Clear quality rubric; iterating measurably helps           | No articulable criteria; first draft usually fine                  |
+| 12  | [Self-Ask](agent_patterns/p12_self_ask/README.md)                           | Tool agent      | Model asks itself follow-up questions; search answers each               | 3           | Multi-hop factual questions                                | Single-hop questions; non-factual tasks                            |
+| 13  | [Chain-of-Verification](agent_patterns/p13_chain_of_verification/README.md) | Self-correction | Draft, plan check questions, answer them independently, revise           | 6           | Cutting factual hallucinations in lists/long answers       | Creative tasks; latency-sensitive chat                             |
+| 14  | [Tree of Thoughts](agent_patterns/p14_tree_of_thoughts/README.md)           | Search          | Branch into candidate thoughts, score, prune, search (BFS/beam)          | 10          | Puzzles/planning where partial steps can be scored         | Simple Q&A; no way to score intermediate steps                     |
 
 \* LLM calls in the repo's mock example — a rough cost/latency signal.
 
@@ -81,20 +81,20 @@ flowchart TD
 
 **Quick picks**
 
-- Fixed sequence of steps → [Prompt chaining](agent_patterns/p07_prompt_chaining/)
-- Different kinds of input need different handling → [Routing](agent_patterns/p08_routing/)
-- Same step over many independent items → [Parallelization (map-reduce)](agent_patterns/p09_map_reduce/)
-- Subtasks only known after reading the input → [Orchestrator-workers](agent_patterns/p10_orchestrator_workers/)
-- Open-ended tool use, each step depends on the last result → [ReAct](agent_patterns/p01_react/)
-- Tool calls predictable up front, run in order → [ReWOO](agent_patterns/p02_rewoo/)
-- Tool calls predictable up front, many independent → [LLMCompiler](agent_patterns/p06_llm_compiler/)
-- Long multi-step task that may need replanning → [Plan-and-Execute](agent_patterns/p03_plan_execute/)
-- Multi-hop factual question → [Self-Ask](agent_patterns/p12_self_ask/)
-- You have tests/rules to grade attempts → [Reflexion](agent_patterns/p04_reflexion/)
-- You can write a rubric for a separate judge → [Evaluator-optimizer](agent_patterns/p11_evaluator_optimizer/)
-- Polish style and clarity, no checker → [Self-Refine](agent_patterns/p05_self_refine/)
-- Factual answers that must not hallucinate → [Chain-of-Verification](agent_patterns/p13_chain_of_verification/)
-- Hard puzzle/planning where partial steps can be scored → [Tree of Thoughts](agent_patterns/p14_tree_of_thoughts/)
+- Fixed sequence of steps → [Prompt chaining](agent_patterns/p07_prompt_chaining/README.md)
+- Different kinds of input need different handling → [Routing](agent_patterns/p08_routing/README.md)
+- Same step over many independent items → [Parallelization (map-reduce)](agent_patterns/p09_map_reduce/README.md)
+- Subtasks only known after reading the input → [Orchestrator-workers](agent_patterns/p10_orchestrator_workers/README.md)
+- Open-ended tool use, each step depends on the last result → [ReAct](agent_patterns/p01_react/README.md)
+- Tool calls predictable up front, run in order → [ReWOO](agent_patterns/p02_rewoo/README.md)
+- Tool calls predictable up front, many independent → [LLMCompiler](agent_patterns/p06_llm_compiler/README.md)
+- Long multi-step task that may need replanning → [Plan-and-Execute](agent_patterns/p03_plan_execute/README.md)
+- Multi-hop factual question → [Self-Ask](agent_patterns/p12_self_ask/README.md)
+- You have tests/rules to grade attempts → [Reflexion](agent_patterns/p04_reflexion/README.md)
+- You can write a rubric for a separate judge → [Evaluator-optimizer](agent_patterns/p11_evaluator_optimizer/README.md)
+- Polish style and clarity, no checker → [Self-Refine](agent_patterns/p05_self_refine/README.md)
+- Factual answers that must not hallucinate → [Chain-of-Verification](agent_patterns/p13_chain_of_verification/README.md)
+- Hard puzzle/planning where partial steps can be scored → [Tree of Thoughts](agent_patterns/p14_tree_of_thoughts/README.md)
 
 ## Plain Python or LangGraph?
 

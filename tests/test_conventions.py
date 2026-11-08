@@ -37,7 +37,8 @@ def test_pattern_folder_follows_conventions(name):
     block = MERMAID.search(doc)
     assert block and block.group(1).strip() == mermaid_for(name).strip(), \
         "stale diagram: run `uv run python -m agent_patterns.core`"
-    assert f"(agent_patterns/{name}/)" in (ROOT / "README.md").read_text(), "add a root README table row"
+    # link the README file itself: local Markdown previews can't open a folder link (GitHub can)
+    assert f"(agent_patterns/{name}/README.md)" in (ROOT / "README.md").read_text(), "add a root README table row"
     mod.build_graph(mod.mock_llm()).invoke(mod.EXAMPLE_INPUT)   # example runs offline
     assert "langgraph" not in (folder / "simple.py").read_text(), "simple.py must be plain Python"
     importlib.import_module(f"agent_patterns.{name}.simple").run(mod.EXAMPLE_INPUT, mod.mock_llm())
