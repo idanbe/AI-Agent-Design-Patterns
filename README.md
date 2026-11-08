@@ -39,6 +39,7 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 | 10 | [Orchestrator-workers](agent_patterns/p10_orchestrator_workers/) | Workflow | LLM decides subtasks at runtime; workers run in parallel; results merged | 4 | Subtasks not known until you see the input | Fixed splits (use map-reduce); tiny tasks |
 | 11 | [Evaluator-optimizer](agent_patterns/p11_evaluator_optimizer/) | Workflow | Generator + separate judge loop until PASS | 4 | Clear quality rubric; iterating measurably helps | No articulable criteria; first draft usually fine |
 | 12 | [Self-Ask](agent_patterns/p12_self_ask/) | Tool agent | Model asks itself follow-up questions; search answers each | 3 | Multi-hop factual questions | Single-hop questions; non-factual tasks |
+| 13 | [Chain-of-Verification](agent_patterns/p13_chain_of_verification/) | Self-correction | Draft, plan check questions, answer them independently, revise | 6 | Cutting factual hallucinations in lists/long answers | Creative tasks; latency-sensitive chat |
 
 \* LLM calls in the repo's mock example — a rough cost/latency signal.
 
