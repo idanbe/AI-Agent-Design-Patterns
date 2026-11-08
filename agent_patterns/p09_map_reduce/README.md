@@ -90,7 +90,3 @@ LLM calls in the mock example: **4** (3 parallel summaries + 1 combine). The moc
 ## vs. closest pattern
 
 **vs Orchestrator-workers:** here the split is fixed by code (one branch per input); there an LLM decides at runtime what the subtasks are.
-
-## Sources
-
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)

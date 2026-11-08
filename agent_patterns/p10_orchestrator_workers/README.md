@@ -91,7 +91,3 @@ LLM calls in the mock example: **4** (1 orchestrator + 3 workers).
 ## vs. closest pattern
 
 **vs Map-reduce:** there the code splits the work (one branch per input); here an LLM decides the subtasks at runtime.
-
-## Sources
-
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)

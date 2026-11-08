@@ -91,7 +91,3 @@ LLM calls in the mock example: **3** (1 if the gate stops the chain).
 ## vs. closest pattern
 
 **vs Plan-and-Execute:** here the steps are fixed in code; in Plan-and-Execute the LLM decides the steps at runtime.
-
-## Sources
-
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)

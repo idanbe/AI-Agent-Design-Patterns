@@ -84,7 +84,3 @@ LLM calls in the mock example: **4** (draft, judge, draft, judge).
 ## vs. closest pattern
 
 **vs Self-Refine:** here the judge is a separate role with a rubric and a hard PASS/FAIL; in Self-Refine one model critiques itself free-form.
-
-## Sources
-
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)

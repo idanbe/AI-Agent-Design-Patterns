@@ -1,6 +1,6 @@
 # 04 · Reflexion
 
-> Learn from failure in words: an external check grades each attempt, the model writes a lesson, and the next attempt reads every lesson so far — Shinn et al., 2023 ([arXiv 2303.11366](https://arxiv.org/abs/2303.11366))
+> Learn from failure in words: an external check grades each attempt, the model writes a lesson, and the next attempt reads every lesson so far — Shinn et al., 2023
 
 ## In plain words
 
@@ -89,7 +89,3 @@ LLM calls in the mock example: **3** (attempt, reflect, attempt).
 ## vs. closest pattern
 
 **vs Self-Refine:** Reflexion needs an *external* signal and keeps lessons across trials as memory; Self-Refine is the model critiquing itself within one task. The paper's evaluators include unit tests, environment rewards and heuristics.
-
-## Sources
-
-- [Reflexion: Language Agents with Verbal Reinforcement Learning (arXiv 2303.11366)](https://arxiv.org/abs/2303.11366)

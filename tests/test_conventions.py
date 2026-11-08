@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MERMAID = re.compile(r"<!-- mermaid:start -->\n```mermaid\n(.*?)\n```\n<!-- mermaid:end -->", re.S)
 LABEL = re.compile(r'[\[({]+"?([^"\])}]+?)"?[\])}]+')     # node text inside [..] (..) {..}
 HEADINGS = ["## In plain words", "## How it works", "## The LangGraph graph", "## Plain Python vs LangGraph",
-            "## Run it", "## When to use", "## When not to use", "## vs. closest pattern", "## Sources"]
+            "## Run it", "## When to use", "## When not to use", "## vs. closest pattern"]
 
 
 def section(doc: str, heading: str) -> str:
@@ -29,6 +29,7 @@ def test_pattern_folder_follows_conventions(name):
     assert doc.startswith(f"# {name[1:3]} · ")
     for h in HEADINGS:
         assert h in doc, f"missing {h}"
+    assert "## Sources" not in doc and "http" not in doc, "no source links in pattern READMEs"
     concept = section(doc, "## How it works")
     assert "```mermaid" in concept, "add the hand-drawn concept diagram"
     for label in LABEL.findall(concept.split("```mermaid", 1)[1].split("```", 1)[0]):
@@ -49,3 +50,7 @@ def test_pattern_is_in_decision_guide(name):
     title = (ROOT / "agent_patterns" / name / "README.md").read_text().splitlines()[0].split("· ", 1)[1]
     guide = (ROOT / "README.md").read_text().split("## Which pattern should I use?", 1)[1]
     assert title in guide, f"add '{title}' to the decision flowchart"
+
+
+def test_root_readme_has_no_external_links():
+    assert "http" not in (ROOT / "README.md").read_text(), "no source links in the root README"

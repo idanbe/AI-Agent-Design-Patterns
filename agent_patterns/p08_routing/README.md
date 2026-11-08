@@ -91,7 +91,3 @@ LLM calls in the mock example: **2** (classify + one handler).
 ## vs. closest pattern
 
 **vs Orchestrator-workers:** a router picks **one** path; an orchestrator splits the task and fans out to **many** workers.
-
-## Sources
-
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)

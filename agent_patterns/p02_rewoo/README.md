@@ -1,6 +1,6 @@
 # 02 · ReWOO
 
-> Reasoning WithOut Observation: plan all tool calls at once with placeholders, run them, then solve — Xu et al., 2023 ([arXiv 2305.18323](https://arxiv.org/abs/2305.18323))
+> Reasoning WithOut Observation: plan all tool calls at once with placeholders, run them, then solve — Xu et al., 2023
 
 ## In plain words
 
@@ -90,7 +90,3 @@ LLM calls in the mock example: **2** — and it stays 2 no matter how many tools
 ## vs. closest pattern
 
 **vs ReAct:** ReWOO never observes between steps, so it can't adapt if step 1 returns something unexpected; ReAct can, at the cost of an LLM call per step.
-
-## Sources
-
-- [ReWOO: Decoupling Reasoning from Observations for Efficient Augmented Language Models (arXiv 2305.18323)](https://arxiv.org/abs/2305.18323)

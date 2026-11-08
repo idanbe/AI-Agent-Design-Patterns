@@ -1,6 +1,6 @@
 # 13 · Chain-of-Verification
 
-> Draft an answer, plan questions that check each claim, answer those questions independently, then revise the draft — Dhuliawala et al., 2023 ([arXiv 2309.11495](https://arxiv.org/abs/2309.11495))
+> Draft an answer, plan questions that check each claim, answer those questions independently, then revise the draft — Dhuliawala et al., 2023
 
 ## In plain words
 
@@ -96,7 +96,3 @@ LLM calls in the mock example: **6** (draft, plan, 3 checks, revise).
 ## vs. closest pattern
 
 **vs Self-Refine:** CoVe checks factual claims one by one with independent questions; Self-Refine judges overall quality and reads its own draft while doing it.
-
-## Sources
-
-- [Chain-of-Verification Reduces Hallucination in Large Language Models (arXiv 2309.11495)](https://arxiv.org/abs/2309.11495)

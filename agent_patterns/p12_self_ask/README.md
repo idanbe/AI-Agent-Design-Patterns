@@ -1,6 +1,6 @@
 # 12 · Self-Ask
 
-> The model explicitly asks itself simpler follow-up questions, a search engine answers each, and then it composes the final answer — Press et al., 2022 ([arXiv 2210.03350](https://arxiv.org/abs/2210.03350))
+> The model explicitly asks itself simpler follow-up questions, a search engine answers each, and then it composes the final answer — Press et al., 2022
 
 ## In plain words
 
@@ -85,7 +85,3 @@ LLM calls in the mock example: **3** (two follow-ups, one final answer).
 ## vs. closest pattern
 
 **vs ReAct:** Self-Ask is ReAct narrowed to one tool (search) and an explicit sub-question format. The paper calls the problem it targets the *compositionality gap*: a model can know both facts and still fail to combine them.
-
-## Sources
-
-- [Measuring and Narrowing the Compositionality Gap in Language Models (arXiv 2210.03350)](https://arxiv.org/abs/2210.03350)

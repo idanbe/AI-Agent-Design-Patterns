@@ -1,6 +1,6 @@
 # 03 · Plan-and-Execute
 
-> A planner writes the steps, an executor does one step at a time, and a replanner updates the rest — builds on Plan-and-Solve, Wang et al., 2023 ([arXiv 2305.04091](https://arxiv.org/abs/2305.04091))
+> A planner writes the steps, an executor does one step at a time, and a replanner updates the rest — builds on Plan-and-Solve, Wang et al., 2023
 
 ## In plain words
 
@@ -90,8 +90,3 @@ LLM calls in the mock example: **5** (plan, then do + replan twice).
 ## vs. closest pattern
 
 **vs ReWOO:** both plan up front, but Plan-and-Execute revisits the plan after every step, so it can recover from surprises; ReWOO never changes its plan.
-
-## Sources
-
-- [Plan-and-Solve Prompting (arXiv 2305.04091)](https://arxiv.org/abs/2305.04091)
-- [LangChain blog: Plan-and-Execute Agents](https://blog.langchain.dev/planning-agents/)

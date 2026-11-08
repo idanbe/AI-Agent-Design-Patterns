@@ -1,6 +1,6 @@
 # 05 · Self-Refine
 
-> One model writes, critiques its own output, and rewrites it — no extra training, no external judge — Madaan et al., 2023 ([arXiv 2303.17651](https://arxiv.org/abs/2303.17651))
+> One model writes, critiques its own output, and rewrites it — no extra training, no external judge — Madaan et al., 2023
 
 ## In plain words
 
@@ -92,7 +92,3 @@ LLM calls in the mock example: **4** (draft, critique, refine, critique).
 ## vs. closest pattern
 
 **vs Evaluator-optimizer:** that pattern uses a separate judge role (possibly a different model) with explicit PASS/FAIL criteria; Self-Refine is one model grading itself free-form.
-
-## Sources
-
-- [Self-Refine: Iterative Refinement with Self-Feedback (arXiv 2303.17651)](https://arxiv.org/abs/2303.17651)

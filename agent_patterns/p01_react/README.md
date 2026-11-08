@@ -1,6 +1,6 @@
 # 01 · ReAct
 
-> Interleave reasoning and acting: the model thinks, calls a tool, reads the result, and decides again — Yao et al., 2022 ([arXiv 2210.03629](https://arxiv.org/abs/2210.03629))
+> Interleave reasoning and acting: the model thinks, calls a tool, reads the result, and decides again — Yao et al., 2022
 
 ## In plain words
 
@@ -87,7 +87,3 @@ LLM calls in the mock example: **3** (one per step, including the final answer).
 ## vs. closest pattern
 
 **vs ReWOO:** ReAct re-plans after every tool result, so it adapts to surprises but pays an LLM call per step. ReWOO plans all tool calls once, up front.
-
-## Sources
-
-- [ReAct: Synergizing Reasoning and Acting in Language Models (arXiv 2210.03629)](https://arxiv.org/abs/2210.03629)

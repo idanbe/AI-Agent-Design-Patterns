@@ -1,6 +1,6 @@
 # 06 · LLMCompiler
 
-> Plan tool calls as a dependency graph and run every call whose inputs are ready in parallel — Kim et al., 2023 ([arXiv 2312.04511](https://arxiv.org/abs/2312.04511))
+> Plan tool calls as a dependency graph and run every call whose inputs are ready in parallel — Kim et al., 2023
 
 ## In plain words
 
@@ -93,7 +93,3 @@ LLM calls in the mock example: **2** (planner + joiner). The trace shows waves `
 ## vs. closest pattern
 
 **vs ReWOO:** both plan up front with placeholders, but LLMCompiler plans a dependency graph and runs independent calls in parallel; ReWOO runs them one by one. The paper also lets the joiner trigger a replan, which this repo skips.
-
-## Sources
-
-- [An LLM Compiler for Parallel Function Calling (arXiv 2312.04511)](https://arxiv.org/abs/2312.04511)

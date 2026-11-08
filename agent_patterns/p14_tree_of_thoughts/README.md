@@ -1,6 +1,6 @@
 # 14 · Tree of Thoughts
 
-> Explore several reasoning paths at once: propose candidate next steps, score each partial state, prune the weak ones and search deeper — Yao et al., 2023 ([arXiv 2305.10601](https://arxiv.org/abs/2305.10601))
+> Explore several reasoning paths at once: propose candidate next steps, score each partial state, prune the weak ones and search deeper — Yao et al., 2023
 
 ## In plain words
 
@@ -88,7 +88,3 @@ LLM calls in the mock example: **10** (4 proposes + 6 ratings) — search is exp
 ## vs. closest pattern
 
 **vs Chain-of-Thought / Reflexion:** CoT follows one path; Reflexion retries the whole attempt after failing. ToT keeps many partial paths alive and prunes them *while* reasoning — search, not retry. LATS (next in the curriculum) adds Monte-Carlo tree search, tools and reflection on top.
-
-## Sources
-
-- [Tree of Thoughts: Deliberate Problem Solving with Large Language Models (arXiv 2305.10601)](https://arxiv.org/abs/2305.10601)

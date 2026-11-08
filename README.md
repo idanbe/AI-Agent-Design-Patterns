@@ -1,4 +1,4 @@
-# Agent Patterns in LangGraph
+# AI Agent Design Patterns
 
 AI agent design patterns, one folder each: a runnable LangGraph graph, the same pattern in plain Python, and a README with diagrams and a simple explanation.
 
@@ -24,8 +24,8 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 
 ## Patterns
 
-| #   | Pattern                                                            | Family          | Idea                                                                     | LLM calls\* | Use when                                                   | Avoid when                                                         |
-| --- | ------------------------------------------------------------------ | --------------- | ------------------------------------------------------------------------ | ----------- | ---------------------------------------------------------- | ------------------------------------------------------------------ |
+| #   | Pattern                                                                     | Family          | Idea                                                                     | LLM calls\* | Use when                                                   | Avoid when                                                         |
+| --- | --------------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------ | ----------- | ---------------------------------------------------------- | ------------------------------------------------------------------ |
 | 01  | [ReAct](agent_patterns/p01_react/README.md)                                 | Tool agent      | Think → act → observe loop, one LLM call per step                        | 3           | Steps unknown upfront; must react to tool results          | Fixed workflows; tight latency/cost budgets                        |
 | 02  | [ReWOO](agent_patterns/p02_rewoo/README.md)                                 | Tool agent      | Plan every tool call once with #E variables, run them, then solve        | 2           | Predictable multi-tool lookups; fewer tokens than ReAct    | Later steps depend on surprises in earlier results                 |
 | 03  | [Plan-and-Execute](agent_patterns/p03_plan_execute/README.md)               | Tool agent      | Planner writes steps, executor does one, replanner adjusts               | 5           | Long multi-step tasks; strong planner + cheap executor     | Short tasks (planning overhead); hard real-time                    |
@@ -46,7 +46,7 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 ## Pattern families
 
 - **Tool agents** (01 ReAct, 02 ReWOO, 03 Plan-and-Execute, 06 LLMCompiler, 12 Self-Ask) — the LLM decides which tools to call and when.
-- **Workflows** (07–11) — the flow is fixed in code and LLM calls fill in the steps; these follow Anthropic's [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents).
+- **Workflows** (07–11) — the flow is fixed in code and LLM calls fill in the steps; these follow Anthropic's "Building effective agents".
 - **Self-correction** (04 Reflexion, 05 Self-Refine, 13 Chain-of-Verification) — check the output and improve it.
 - **Search** (14 Tree of Thoughts) — explore several reasoning paths and prune the weak ones.
 
