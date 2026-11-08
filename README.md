@@ -37,6 +37,7 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 | 08 | [Routing](agent_patterns/p08_routing/) | Workflow | Classify the input, send it to one specialized handler | 2 | Distinct input categories needing different prompts/models | Categories overlap; one prompt handles all well |
 | 09 | [Parallelization (map-reduce)](agent_patterns/p09_map_reduce/) | Workflow | Same LLM step on many inputs in parallel, then combine | 4 | Many independent chunks/docs; voting for confidence | Items depend on each other; strict rate limits |
 | 10 | [Orchestrator-workers](agent_patterns/p10_orchestrator_workers/) | Workflow | LLM decides subtasks at runtime; workers run in parallel; results merged | 4 | Subtasks not known until you see the input | Fixed splits (use map-reduce); tiny tasks |
+| 11 | [Evaluator-optimizer](agent_patterns/p11_evaluator_optimizer/) | Workflow | Generator + separate judge loop until PASS | 4 | Clear quality rubric; iterating measurably helps | No articulable criteria; first draft usually fine |
 
 \* LLM calls in the repo's mock example — a rough cost/latency signal.
 
