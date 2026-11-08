@@ -65,3 +65,15 @@ def test_run_demo_prints_nodes_and_returns_final_state(capsys):
 
 def test_patterns_discovered_and_numbered_consecutively():
     assert [int(n[1:3]) for n in PATTERNS] == list(range(1, len(PATTERNS) + 1))
+
+
+def test_run_demo_prints_messages_readably(capsys):
+    from langgraph.graph import MessagesState
+    call = AIMessage("", tool_calls=[{"name": "search", "args": {"query": "x"}, "id": "1"}])
+    g = StateGraph(MessagesState)
+    g.add_node("agent", lambda s: {"messages": [call, AIMessage("done")]})
+    g.add_edge(START, "agent"); g.add_edge("agent", END)
+    run_demo(g.compile(), {"messages": []})
+    out = capsys.readouterr().out
+    assert "ai → search({'query': 'x'})" in out and "ai: done" in out
+    assert "additional_kwargs" not in out

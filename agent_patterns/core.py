@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Callable
 
 from langchain_core.language_models import BaseChatModel
-from langchain_core.messages import AIMessage
+from langchain_core.messages import AIMessage, BaseMessage
 from langchain_core.outputs import ChatGeneration, ChatResult
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
@@ -63,8 +63,18 @@ def get_llm(mock: Callable[[], BaseChatModel]) -> BaseChatModel:
                       base_url=OPENROUTER_BASE_URL, api_key=key, temperature=0)
 
 
+def _message(m: BaseMessage) -> str:
+    calls = getattr(m, "tool_calls", None)
+    if calls:
+        return "; ".join(f"{m.type} → {c['name']}({c['args']})" for c in calls)
+    return f"{m.type}: {m.content}"
+
+
 def _short(value, limit: int = 200) -> str:
-    text = repr(value)
+    if isinstance(value, list) and value and all(isinstance(v, BaseMessage) for v in value):
+        text = " | ".join(_message(v) for v in value)
+    else:
+        text = repr(value)
     return text if len(text) <= limit else text[:limit] + "…"
 
 

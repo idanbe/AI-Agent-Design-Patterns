@@ -27,6 +27,7 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 
 | # | Pattern | Family | Idea | LLM calls* | Use when | Avoid when |
 |---|---|---|---|---|---|---|
+| 01 | [ReAct](agent_patterns/p01_react/) | Tool agent | Think → act → observe loop, one LLM call per step | 3 | Steps unknown upfront; must react to tool results | Fixed workflows; tight latency/cost budgets |
 
 \* LLM calls in the repo's mock example — a rough cost/latency signal.
 
