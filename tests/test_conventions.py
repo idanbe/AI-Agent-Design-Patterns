@@ -41,3 +41,10 @@ def test_pattern_folder_follows_conventions(name):
     mod.build_graph(mod.mock_llm()).invoke(mod.EXAMPLE_INPUT)   # example runs offline
     assert "langgraph" not in (folder / "simple.py").read_text(), "simple.py must be plain Python"
     importlib.import_module(f"agent_patterns.{name}.simple").run(mod.EXAMPLE_INPUT, mod.mock_llm())
+
+
+@pytest.mark.parametrize("name", PATTERNS)
+def test_pattern_is_in_decision_guide(name):
+    title = (ROOT / "agent_patterns" / name / "README.md").read_text().splitlines()[0].split("· ", 1)[1]
+    guide = (ROOT / "README.md").read_text().split("## Which pattern should I use?", 1)[1]
+    assert title in guide, f"add '{title}' to the decision flowchart"

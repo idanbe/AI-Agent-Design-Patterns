@@ -24,7 +24,7 @@ Each pattern is one folder: `agent_patterns/pNN_snake/` with `__init__.py` (empt
    - `EXAMPLE_INPUT` holds every key the graph reads, including empty reducer lists.
 5. **`simple.py`** from its skeleton: same helpers, plain control flow (`for`/`while`, `ThreadPoolExecutor` for parallel). Never import `langgraph`.
 6. **Folder `README.md`** from the template below. Then `uv run python -m agent_patterns.core` fills the generated LangGraph diagram.
-7. **Root `README.md`**: add the table row (link `agent_patterns/pNN_x/`) and a leaf in the "Which pattern should I use?" flowchart.
+7. **Root `README.md`**: add the table row (link `agent_patterns/pNN_x/`), a leaf in the "Which pattern should I use?" flowchart (`<br/>` for names over 20 chars), a "Quick picks" line with the exact name and folder link, and the number in "Pattern families".
 8. **Verify**: `uv run pytest -q` green; `uv run python -m agent_patterns.pNN_x.graph` prints the node trace; `uv run python -m agent_patterns.pNN_x.simple` prints the same answer.
 9. **Commit**: `feat(pNN): add <Name> pattern`.
 
