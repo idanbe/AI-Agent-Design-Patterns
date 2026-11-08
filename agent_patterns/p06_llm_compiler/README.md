@@ -1,6 +1,6 @@
 # 06 · LLMCompiler
 
-> Plan tool calls as a dependency graph and run every call whose inputs are ready in parallel — Kim et al., 2023
+> Plan tool calls as a dependency graph and run every call whose inputs are ready in parallel
 
 ## In plain words
 

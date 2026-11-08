@@ -1,6 +1,6 @@
 # 12 · Self-Ask
 
-> The model explicitly asks itself simpler follow-up questions, a search engine answers each, and then it composes the final answer — Press et al., 2022
+> The model explicitly asks itself simpler follow-up questions, a search engine answers each, and then it composes the final answer
 
 ## In plain words
 

@@ -1,6 +1,6 @@
 # 07 · Prompt chaining
 
-> Split a task into a fixed sequence of LLM calls, each working on the previous one's output, with code checks ("gates") in between — Anthropic, "Building effective agents" (Schluntz & Zhang, 2024)
+> Split a task into a fixed sequence of LLM calls, each working on the previous one's output, with code checks ("gates") in between
 
 ## In plain words
 

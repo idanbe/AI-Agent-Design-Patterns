@@ -1,6 +1,6 @@
 # 03 · Plan-and-Execute
 
-> A planner writes the steps, an executor does one step at a time, and a replanner updates the rest — builds on Plan-and-Solve, Wang et al., 2023
+> A planner writes the steps, an executor does one step at a time, and a replanner updates the rest
 
 ## In plain words
 

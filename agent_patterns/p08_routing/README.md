@@ -1,6 +1,6 @@
 # 08 · Routing
 
-> Classify the input first, then hand it to one specialized handler with its own prompt (or model) — Anthropic, "Building effective agents" (Schluntz & Zhang, 2024)
+> Classify the input first, then hand it to one specialized handler with its own prompt (or model)
 
 ## In plain words
 

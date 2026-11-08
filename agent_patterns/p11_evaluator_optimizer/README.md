@@ -1,6 +1,6 @@
 # 11 · Evaluator-optimizer
 
-> One LLM generates, a separate LLM judge grades it against clear criteria and explains what to fix; loop until it passes — Anthropic, "Building effective agents" (Schluntz & Zhang, 2024)
+> One LLM generates, a separate LLM judge grades it against clear criteria and explains what to fix; loop until it passes
 
 ## In plain words
 

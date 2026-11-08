@@ -1,6 +1,6 @@
 # 14 · Tree of Thoughts
 
-> Explore several reasoning paths at once: propose candidate next steps, score each partial state, prune the weak ones and search deeper — Yao et al., 2023
+> Explore several reasoning paths at once: propose candidate next steps, score each partial state, prune the weak ones and search deeper
 
 ## In plain words
 

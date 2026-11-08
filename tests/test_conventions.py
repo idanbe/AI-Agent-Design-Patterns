@@ -10,6 +10,7 @@ from agent_patterns.core import PATTERNS, mermaid_for
 ROOT = Path(__file__).resolve().parents[1]
 MERMAID = re.compile(r"<!-- mermaid:start -->\n```mermaid\n(.*?)\n```\n<!-- mermaid:end -->", re.S)
 LABEL = re.compile(r'[\[({]+"?([^"\])}]+?)"?[\])}]+')     # node text inside [..] (..) {..}
+CITATION = re.compile(r"et al\.|Building effective agents|\(\w+ & \w+, (19|20)\d{2}\)")  # no author/year credits
 HEADINGS = ["## In plain words", "## How it works", "## The LangGraph graph", "## Plain Python vs LangGraph",
             "## Run it", "## When to use", "## When not to use", "## vs. closest pattern"]
 
@@ -30,6 +31,7 @@ def test_pattern_folder_follows_conventions(name):
     for h in HEADINGS:
         assert h in doc, f"missing {h}"
     assert "## Sources" not in doc and "http" not in doc, "no source links in pattern READMEs"
+    assert not CITATION.search(doc), "no author/year citations in pattern READMEs"
     concept = section(doc, "## How it works")
     assert "```mermaid" in concept, "add the hand-drawn concept diagram"
     for label in LABEL.findall(concept.split("```mermaid", 1)[1].split("```", 1)[0]):
@@ -53,4 +55,6 @@ def test_pattern_is_in_decision_guide(name):
 
 
 def test_root_readme_has_no_external_links():
-    assert "http" not in (ROOT / "README.md").read_text(), "no source links in the root README"
+    root = (ROOT / "README.md").read_text()
+    assert "http" not in root, "no source links in the root README"
+    assert not CITATION.search(root), "no author/year citations in the root README"

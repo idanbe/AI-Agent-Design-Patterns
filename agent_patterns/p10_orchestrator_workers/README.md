@@ -1,6 +1,6 @@
 # 10 · Orchestrator-workers
 
-> A central LLM breaks the task into subtasks it picks at runtime, hands each to a worker, and the results are merged — Anthropic, "Building effective agents" (Schluntz & Zhang, 2024)
+> A central LLM breaks the task into subtasks it picks at runtime, hands each to a worker, and the results are merged
 
 ## In plain words
 

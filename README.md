@@ -46,7 +46,7 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 ## Pattern families
 
 - **Tool agents** (01 ReAct, 02 ReWOO, 03 Plan-and-Execute, 06 LLMCompiler, 12 Self-Ask) — the LLM decides which tools to call and when.
-- **Workflows** (07–11) — the flow is fixed in code and LLM calls fill in the steps; these follow Anthropic's "Building effective agents".
+- **Workflows** (07–11) — the flow is fixed in code and LLM calls fill in the steps.
 - **Self-correction** (04 Reflexion, 05 Self-Refine, 13 Chain-of-Verification) — check the output and improve it.
 - **Search** (14 Tree of Thoughts) — explore several reasoning paths and prune the weak ones.
 

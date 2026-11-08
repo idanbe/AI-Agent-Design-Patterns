@@ -1,6 +1,6 @@
 # 09 · Parallelization (map-reduce)
 
-> Run the same LLM step on many independent inputs at the same time, then combine the results — Anthropic, "Building effective agents" (Schluntz & Zhang, 2024)
+> Run the same LLM step on many independent inputs at the same time, then combine the results
 
 ## In plain words
 

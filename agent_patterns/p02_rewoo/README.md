@@ -1,6 +1,6 @@
 # 02 · ReWOO
 
-> Reasoning WithOut Observation: plan all tool calls at once with placeholders, run them, then solve — Xu et al., 2023
+> Reasoning WithOut Observation: plan all tool calls at once with placeholders, run them, then solve
 
 ## In plain words
 

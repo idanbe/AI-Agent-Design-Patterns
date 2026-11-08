@@ -1,6 +1,6 @@
 # 04 · Reflexion
 
-> Learn from failure in words: an external check grades each attempt, the model writes a lesson, and the next attempt reads every lesson so far — Shinn et al., 2023
+> Learn from failure in words: an external check grades each attempt, the model writes a lesson, and the next attempt reads every lesson so far
 
 ## In plain words
 

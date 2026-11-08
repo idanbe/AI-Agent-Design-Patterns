@@ -11,7 +11,7 @@ Each pattern is one folder: `agent_patterns/pNN_snake/` with `__init__.py` (empt
 ## Recipe
 
 1. **Name it.** NN = number of existing `agent_patterns/pNN_*` folders + 1. Folder `pNN_snake_name`.
-2. **Research.** Read the paper or official doc to get the facts right (authors, year, results). Never invent facts. **No links in any README** — credit the source as plain text (`— Yao et al., 2022`); the conventions test rejects `http`.
+2. **Research.** Read the paper or official doc to get the facts right (how it works, key results). Never invent facts. **No links and no citations in any README** — no URLs, no authors/years like `Wang et al., 2023`; the conventions test rejects both.
 3. **Test first.** Create the folder and empty `__init__.py`, then `test_graph.py`: assert final state values and `llm.calls`, one test per parse fallback and per loop cap, plus `test_simple_matches_graph` (template below). Run every fallback/cap script through **both** `build_graph` and `simple.run` and assert they agree. Run `uv run pytest agent_patterns/pNN_x -q` and watch it fail.
 4. **`graph.py`** from the skeleton below. Rules:
    - Prompts are module-level `UPPER_CASE` strings with `.format()` fields that state the exact reply format.
@@ -87,7 +87,7 @@ def test_simple_matches_graph():
 ````markdown
 # NN · Name
 
-> One-sentence idea — Authors, Year
+> One-sentence idea
 
 ## In plain words
 2–4 sentences, no jargon, one everyday analogy.

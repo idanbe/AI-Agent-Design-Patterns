@@ -1,6 +1,6 @@
 # 13 · Chain-of-Verification
 
-> Draft an answer, plan questions that check each claim, answer those questions independently, then revise the draft — Dhuliawala et al., 2023
+> Draft an answer, plan questions that check each claim, answer those questions independently, then revise the draft
 
 ## In plain words
 

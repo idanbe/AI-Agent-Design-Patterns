@@ -1,6 +1,6 @@
 # 05 · Self-Refine
 
-> One model writes, critiques its own output, and rewrites it — no extra training, no external judge — Madaan et al., 2023
+> One model writes, critiques its own output, and rewrites it — no extra training, no external judge
 
 ## In plain words
 

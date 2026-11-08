@@ -1,6 +1,6 @@
 # 01 · ReAct
 
-> Interleave reasoning and acting: the model thinks, calls a tool, reads the result, and decides again — Yao et al., 2022
+> Interleave reasoning and acting: the model thinks, calls a tool, reads the result, and decides again
 
 ## In plain words
 
