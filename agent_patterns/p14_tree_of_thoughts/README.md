@@ -87,4 +87,4 @@ LLM calls in the mock example: **10** (4 proposes + 6 ratings) — search is exp
 
 ## vs. closest pattern
 
-**vs Chain-of-Thought / Reflexion:** CoT follows one path; Reflexion retries the whole attempt after failing. ToT keeps many partial paths alive and prunes them *while* reasoning — search, not retry. LATS (next in the curriculum) adds Monte-Carlo tree search, tools and reflection on top.
+**vs Chain-of-Thought / Reflexion:** CoT follows one path; Reflexion retries the whole attempt after failing. ToT keeps many partial paths alive and prunes them *while* reasoning — search, not retry. [LATS](../p15_lats/README.md) (15) adds Monte-Carlo tree search, tools and reflection on top.
