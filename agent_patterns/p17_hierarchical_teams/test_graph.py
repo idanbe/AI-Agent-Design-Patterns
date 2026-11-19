@@ -62,3 +62,12 @@ def test_simple_matches_graph():
     for key in ("answer", "history", "turns"):
         assert s[key] == g[key], key
     assert s_llm.calls == g_llm.calls
+
+
+def test_diagram_shows_every_team_member():
+    # teams are real subgraph nodes, so LangGraph can draw what's inside them
+    from agent_patterns.core import mermaid_for
+    diagram = mermaid_for("p17_hierarchical_teams")
+    for team in TEAMS.values():
+        for member in team["workers"]:
+            assert member in diagram, member

@@ -85,13 +85,16 @@ class State(TypedDict):                     # the CEO's level
     answer: str                             # the launch plan: every team's report
 
 
-class TeamState(TypedDict):                 # one team's level - a different, private schema
+class TeamIO(TypedDict):                    # what a team shares with the CEO's graph
     task: str
-    company: str                            # read-only view of the other teams' reports
+    history: list[tuple[str, str]]          # in: every team's report so far; out: just this team's new report
+    turns: int                              # in: the CEO's team-turn count; out: one more
+
+
+class TeamState(TeamIO):                    # plus the team's private working state, never seen by the CEO
     team_history: Annotated[list[tuple[str, str]], operator.add]   # (member, output)
     next_worker: str
     worker_turns: int
-    report: str
 
 
 def work_text(history: list[tuple[str, str]]) -> str:
@@ -164,27 +167,33 @@ def mock_llm() -> MockLLM:
 
 
 def build_team_graph(team: str, llm: BaseChatModel):
-    """One team = its own small supervisor graph: lead -> member -> lead ... -> DONE."""
+    """One team = its own small supervisor graph: lead -> member -> lead ... -> DONE -> report."""
     def lead(state: TeamState):
-        choice = lead_decide(team, state["task"], state["company"], state["team_history"], state["worker_turns"], llm)
-        if choice == DONE:
-            return {"next_worker": DONE, "report": work_text(state["team_history"])}
+        choice = lead_decide(team, state["task"], company_text(state["history"]), state.get("team_history", []),
+                             state.get("worker_turns", 0), llm)
         return {"next_worker": choice}
 
     def make_member(worker: str):
         def member(state: TeamState):
-            output = member_work(team, worker, state["task"], state["company"], state["team_history"], llm)
-            return {"team_history": [(worker, output)], "worker_turns": state["worker_turns"] + 1}
+            output = member_work(team, worker, state["task"], company_text(state["history"]),
+                                 state.get("team_history", []), llm)
+            return {"team_history": [(worker, output)], "worker_turns": state.get("worker_turns", 0) + 1}
         return member
 
-    g = StateGraph(TeamState)
+    def report(state: TeamState):
+        # overwrite `history` with only this team's report: the CEO's graph appends it to the company history
+        return {"history": [(team, work_text(state.get("team_history", [])))], "turns": state["turns"] + 1}
+
+    g = StateGraph(TeamState, input_schema=TeamIO, output_schema=TeamIO)
     g.add_node("lead", lead)
+    g.add_node("report", report)
     for worker in TEAMS[team]["workers"]:
         g.add_node(worker, make_member(worker))
         g.add_edge(worker, "lead")
     g.add_edge(START, "lead")
-    g.add_conditional_edges("lead", lambda s: END if s["next_worker"] == DONE else s["next_worker"],
-                            {**{w: w for w in TEAMS[team]["workers"]}, END: END})
+    g.add_conditional_edges("lead", lambda s: "report" if s["next_worker"] == DONE else s["next_worker"],
+                            {**{w: w for w in TEAMS[team]["workers"]}, "report": "report"})
+    g.add_edge("report", END)
     return g.compile()
 
 
@@ -198,18 +207,10 @@ def build_graph(llm: BaseChatModel | None = None):
             return {"next_team": FINISH, "answer": company_text(state["history"]) if state["history"] else NO_ANSWER}
         return {"next_team": choice}
 
-    def make_team_node(team: str):
-        def run_team(state: State):
-            # the team graph has its own state schema, so the parent calls it and maps the result back
-            out = team_graphs[team].invoke({"task": state["task"], "company": company_text(state["history"]),
-                                            "team_history": [], "worker_turns": 0})
-            return {"history": [(team, out["report"])], "turns": state["turns"] + 1}
-        return run_team
-
     g = StateGraph(State)
     g.add_node("ceo", ceo)
     for team in TEAMS:
-        g.add_node(team, make_team_node(team))
+        g.add_node(team, team_graphs[team])     # a compiled graph as a node: a real subgraph LangGraph can draw
         g.add_edge(team, "ceo")                 # every team reports back to the CEO
     g.add_edge(START, "ceo")
     g.add_conditional_edges("ceo", lambda s: END if s["next_team"] == FINISH else s["next_team"],

@@ -71,21 +71,69 @@ config:
 graph TD;
 	__start__([<p>__start__</p>]):::first
 	ceo(ceo)
-	design(design)
-	development(development)
-	marketing(marketing)
-	sales(sales)
 	__end__([<p>__end__</p>]):::last
 	__start__ --> ceo;
 	ceo -.-> __end__;
-	ceo -.-> design;
-	ceo -.-> development;
-	ceo -.-> marketing;
-	ceo -.-> sales;
-	design --> ceo;
-	development --> ceo;
-	marketing --> ceo;
-	sales --> ceo;
+	ceo -.-> design\3a__start__;
+	ceo -.-> development\3a__start__;
+	ceo -.-> marketing\3a__start__;
+	ceo -.-> sales\3a__start__;
+	design\3areport --> ceo;
+	development\3areport --> ceo;
+	marketing\3areport --> ceo;
+	sales\3areport --> ceo;
+	subgraph design
+	design\3a__start__(<p>__start__</p>)
+	design\3alead(lead)
+	design\3areport(report)
+	design\3aux_designer(ux_designer)
+	design\3aui_designer(ui_designer)
+	design\3a__start__ --> design\3alead;
+	design\3alead -.-> design\3areport;
+	design\3alead -.-> design\3aui_designer;
+	design\3alead -.-> design\3aux_designer;
+	design\3aui_designer --> design\3alead;
+	design\3aux_designer --> design\3alead;
+	end
+	subgraph development
+	development\3a__start__(<p>__start__</p>)
+	development\3alead(lead)
+	development\3areport(report)
+	development\3abackend_dev(backend_dev)
+	development\3afrontend_dev(frontend_dev)
+	development\3a__start__ --> development\3alead;
+	development\3abackend_dev --> development\3alead;
+	development\3afrontend_dev --> development\3alead;
+	development\3alead -.-> development\3abackend_dev;
+	development\3alead -.-> development\3afrontend_dev;
+	development\3alead -.-> development\3areport;
+	end
+	subgraph marketing
+	marketing\3a__start__(<p>__start__</p>)
+	marketing\3alead(lead)
+	marketing\3areport(report)
+	marketing\3acopywriter(copywriter)
+	marketing\3agrowth_marketer(growth_marketer)
+	marketing\3a__start__ --> marketing\3alead;
+	marketing\3acopywriter --> marketing\3alead;
+	marketing\3agrowth_marketer --> marketing\3alead;
+	marketing\3alead -.-> marketing\3acopywriter;
+	marketing\3alead -.-> marketing\3agrowth_marketer;
+	marketing\3alead -.-> marketing\3areport;
+	end
+	subgraph sales
+	sales\3a__start__(<p>__start__</p>)
+	sales\3alead(lead)
+	sales\3areport(report)
+	sales\3aaccount_exec(account_exec)
+	sales\3asales_engineer(sales_engineer)
+	sales\3a__start__ --> sales\3alead;
+	sales\3aaccount_exec --> sales\3alead;
+	sales\3alead -.-> sales\3aaccount_exec;
+	sales\3alead -.-> sales\3areport;
+	sales\3alead -.-> sales\3asales_engineer;
+	sales\3asales_engineer --> sales\3alead;
+	end
 	classDef default fill:#f2f0ff,line-height:1.2
 	classDef first fill-opacity:0
 	classDef last fill:#bfb6fc
@@ -95,9 +143,9 @@ graph TD;
 | Node | Role |
 |---|---|
 | `ceo` | top supervisor: picks the next team or `FINISH` |
-| `design` / `development` / `marketing` / `sales` | each calls its **own compiled team graph** (`build_team_graph`) and adds the team's report |
+| `design` / `development` / `marketing` / `sales` | each is a **compiled team graph added as a node** (a subgraph): `lead`, one node per member, and `report` |
 
-Inside each team graph: a `lead` node and one node per member — the Supervisor pattern (16), one level down. The team graph has its own state (`TeamState`), so the parent calls it from a node and maps the result back.
+Each team is the Supervisor pattern (16), one level down: `lead` picks a member, the member reports back, and on `DONE` the `report` node hands the team's work to the CEO. The team shares only `task`, `history` and `turns` with the CEO's graph (`input_schema` / `output_schema` = `TeamIO`); its `team_history` stays private. Because the teams are real subgraph nodes, the diagram above is drawn with `get_graph(xray=True)` and shows every member.
 
 Code: [graph.py](graph.py)
 

@@ -95,7 +95,7 @@ def run_demo(graph, inputs: dict) -> dict:
 
 def mermaid_for(name: str) -> str:
     mod = importlib.import_module(f"agent_patterns.{name}.graph")
-    return mod.build_graph(mod.mock_llm()).get_graph().draw_mermaid()
+    return mod.build_graph(mod.mock_llm()).get_graph(xray=True).draw_mermaid()  # xray: draw inside subgraphs
 
 
 def sync_docs() -> list[str]:
