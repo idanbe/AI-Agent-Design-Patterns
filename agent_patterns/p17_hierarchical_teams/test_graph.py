@@ -4,27 +4,26 @@ from agent_patterns.core import MockLLM
 from agent_patterns.p17_hierarchical_teams.graph import (build_graph, mock_llm, parse_choice, EXAMPLE_INPUT, TEAMS,
                                                          FINISH, DONE, MAX_TEAM_TURNS, MAX_WORKER_TURNS, NO_ANSWER)
 
-FINAL_LINE = "HydroSmart: the smart bottle that keeps you hydrated. Launch price $39."
 
-
-def test_ceo_runs_research_then_marketing_and_each_lead_runs_its_own_team():
+def test_ceo_runs_four_teams_and_each_lead_runs_its_own_members():
     llm = mock_llm()
     out = build_graph(llm).invoke(EXAMPLE_INPUT)
-    assert [team for team, _ in out["history"]] == ["research", "marketing"]
-    research_report = out["history"][0][1]
-    assert "market_researcher:" in research_report and "data_analyst:" in research_report
-    assert out["answer"] == FINAL_LINE
-    copywriter_prompt = llm.prompts[8]
-    assert "You are the copywriter" in copywriter_prompt and "gym-goers" in copywriter_prompt  # sees research's report
-    assert out["turns"] == 2 and llm.calls == 13       # CEO 3 + research lead 3 + 2 workers + marketing lead 3 + 2 workers
+    assert [team for team, _ in out["history"]] == ["design", "development", "marketing", "sales"]
+    reports = dict(out["history"])
+    assert "ux_designer:" in reports["design"] and "ui_designer:" in reports["design"]
+    assert "account_exec:" in reports["sales"] and "sales_engineer:" not in reports["sales"]   # lead used one member
+    assert out["answer"].startswith("[design]") and "[sales]" in out["answer"]                # the whole launch plan
+    frontend_prompt = llm.prompts[10]
+    assert "You are the frontend developer" in frontend_prompt and "swipe to snooze" in frontend_prompt  # sees design
+    assert out["turns"] == 4 and llm.calls == 23   # CEO 5 + design 5 + development 5 + marketing 5 + sales 3
 
 
 @pytest.mark.parametrize("reply,options,stop,expected", [
     ("Marketing.", TEAMS, FINISH, "marketing"),
     ("banana", TEAMS, FINISH, FINISH),
-    ("**data_analyst**", TEAMS["research"]["workers"], DONE, "data_analyst"),
-    ("DONE", TEAMS["research"]["workers"], DONE, DONE),
-    ("", TEAMS["marketing"]["workers"], DONE, DONE),
+    ("**backend_dev**", TEAMS["development"]["workers"], DONE, "backend_dev"),
+    ("DONE", TEAMS["design"]["workers"], DONE, DONE),
+    ("", TEAMS["sales"]["workers"], DONE, DONE),
 ])
 def test_parse_choice_normalizes_and_stops_on_unknown(reply, options, stop, expected):
     assert parse_choice(reply, options, stop) == expected
@@ -45,14 +44,14 @@ def test_garbage_ceo_reply_stops_at_once_in_both_versions():
 
 
 def test_both_levels_are_capped_in_both_versions():
-    script = dict(by_keyword={"You are the CEO": "research",                    # never says FINISH
-                              "You lead the research team": "data_analyst",    # never says DONE
-                              "You are the data analyst": "more numbers"})
+    script = dict(by_keyword={"You are the CEO": "development",                  # never says FINISH
+                              "You lead the development team": "backend_dev",    # never says DONE
+                              "You are the backend developer": "more code"})
     g, s, llm = run_both(script)
     assert g["turns"] == s["turns"] == MAX_TEAM_TURNS
     assert g["history"] == s["history"]
-    assert all(report.count("data_analyst:") == MAX_WORKER_TURNS for _, report in g["history"])
-    assert llm.calls == MAX_TEAM_TURNS * (1 + 2 * MAX_WORKER_TURNS)   # per team turn: CEO + lead/worker pairs
+    assert all(report.count("backend_dev:") == MAX_WORKER_TURNS for _, report in g["history"])
+    assert llm.calls == MAX_TEAM_TURNS * (1 + 2 * MAX_WORKER_TURNS)   # per team turn: CEO + lead/member pairs
 
 
 def test_simple_matches_graph():

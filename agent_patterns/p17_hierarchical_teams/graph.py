@@ -10,27 +10,44 @@ from agent_patterns.core import MockLLM, get_llm, run_demo
 
 FINISH = "FINISH"          # the CEO is done with the whole task
 DONE = "DONE"              # a team lead is done with the team's part
-MAX_TEAM_TURNS = 4         # team runs the CEO may order
+MAX_TEAM_TURNS = 8         # team runs the CEO may order (a team can be called again)
 MAX_WORKER_TURNS = 4       # member runs a lead may order per team run
 NO_ANSWER = "(no answer)"
 
 # The company: each team has a short description and its own members (each member = its own prompt).
 TEAMS = {
-    "research": {
-        "about": "market and pricing facts",
+    "design": {
+        "about": "how the feature works and looks",
         "workers": {
-            "market_researcher": "You are the market researcher. Find who will buy the product and what competitors "
-                                 "charge. Reply with the facts only.",
-            "data_analyst": "You are the data analyst. Turn the facts into a launch price and show the math. "
-                            "Reply with the result only.",
+            "ux_designer": "You are the UX designer. Design the user flow for the feature. One or two sentences.",
+            "ui_designer": "You are the UI designer. Describe how the feature looks on screen, based on the flow. "
+                           "One or two sentences.",
+        },
+    },
+    "development": {
+        "about": "building it",
+        "workers": {
+            "backend_dev": "You are the backend developer. Plan the server side for the design: APIs, data, effort. "
+                           "One or two sentences.",
+            "frontend_dev": "You are the frontend developer. Plan how to build the screens from the design. "
+                            "One or two sentences.",
         },
     },
     "marketing": {
-        "about": "the launch message",
+        "about": "the launch campaign",
         "workers": {
-            "copywriter": "You are the copywriter. Write a short launch tagline from the company work so far.",
-            "editor": "You are the editor. Polish the copy into one final launch line with the price. "
-                      "Reply with that line only.",
+            "copywriter": "You are the copywriter. Write the launch headline for the feature. One line.",
+            "growth_marketer": "You are the growth marketer. Plan the launch campaign with a measurable goal. "
+                               "One or two sentences.",
+        },
+    },
+    "sales": {
+        "about": "selling it to business customers",
+        "workers": {
+            "account_exec": "You are the account executive. Write the pitch for existing business customers. "
+                            "One or two sentences.",
+            "sales_engineer": "You are the sales engineer. Prepare the technical demo for customers. "
+                              "One or two sentences.",
         },
     },
 }
@@ -65,8 +82,7 @@ class State(TypedDict):                     # the CEO's level
     history: Annotated[list[tuple[str, str]], operator.add]   # (team, report)
     next_team: str
     turns: int
-    latest: str                             # newest member output, the answer when the CEO finishes
-    answer: str
+    answer: str                             # the launch plan: every team's report
 
 
 class TeamState(TypedDict):                 # one team's level - a different, private schema
@@ -76,11 +92,15 @@ class TeamState(TypedDict):                 # one team's level - a different, pr
     next_worker: str
     worker_turns: int
     report: str
-    latest: str
 
 
 def work_text(history: list[tuple[str, str]]) -> str:
     return "\n".join(f"{who}: {text}" for who, text in history) or "(nothing yet)"
+
+
+def company_text(history: list[tuple[str, str]]) -> str:
+    """Every team's report, one section per team: what the CEO and all other teams see."""
+    return "\n".join(f"[{team}]\n{report}" for team, report in history) or "(nothing yet)"
 
 
 def parse_choice(reply: str, options, stop: str) -> str:
@@ -93,7 +113,7 @@ def ceo_decide(task: str, history: list[tuple[str, str]], turns: int, llm: BaseC
     if turns >= MAX_TEAM_TURNS:
         return FINISH
     teams = ", ".join(f"{name} ({t['about']})" for name, t in TEAMS.items())
-    reply = llm.invoke(CEO.format(teams=teams, task=task, company=work_text(history))).content
+    reply = llm.invoke(CEO.format(teams=teams, task=task, company=company_text(history))).content
     return parse_choice(str(reply), TEAMS, FINISH)
 
 
@@ -117,18 +137,28 @@ def member_work(team: str, worker: str, task: str, company: str, team_history: l
 def mock_llm() -> MockLLM:
     # every level takes turns, so one plain sequence is deterministic
     return MockLLM(responses=[
-        "research",                                   # CEO
-        "market_researcher",                          # research lead
-        "Buyers: gym-goers aged 25-40. Competitor bottles sell for $35-$45.",
-        "data_analyst",                               # research lead
-        "Launch at $39: inside the $35-$45 range, about 30% margin on a $27 unit cost.",
-        "DONE",                                       # research lead
+        "design",                                     # CEO
+        "ux_designer",                                # design lead
+        "Flow: the user types a task, the app suggests a reminder time from their calendar, one tap accepts it.",
+        "ui_designer",                                # design lead
+        "A reminder chip under each task with a bell icon; swipe to snooze.",
+        "DONE",                                       # design lead
+        "development",                                # CEO
+        "backend_dev",                                # development lead
+        "Reminder API and a job queue that reads the user's calendar; about two sprints.",
+        "frontend_dev",                               # development lead
+        "Build the reminder chip and swipe to snooze from the design; ship behind a feature flag.",
+        "DONE",                                       # development lead
         "marketing",                                  # CEO
         "copywriter",                                 # marketing lead
-        "HydroSmart reminds gym-goers to drink, for $39.",
-        "editor",                                     # marketing lead
-        "HydroSmart: the smart bottle that keeps you hydrated. Launch price $39.",
+        "Smart Reminders: TaskFlow now tells you when, not just what.",
+        "growth_marketer",                            # marketing lead
+        "Launch email to 20k users plus an in-app banner; goal: 15% of users try it in month one.",
         "DONE",                                       # marketing lead
+        "sales",                                      # CEO
+        "account_exec",                               # sales lead - one member is enough here
+        "Pitch to our 40 team accounts: fewer missed deadlines; offer Smart Reminders in the Pro plan.",
+        "DONE",                                       # sales lead
         "FINISH",                                     # CEO
     ])
 
@@ -138,8 +168,7 @@ def build_team_graph(team: str, llm: BaseChatModel):
     def lead(state: TeamState):
         choice = lead_decide(team, state["task"], state["company"], state["team_history"], state["worker_turns"], llm)
         if choice == DONE:
-            history = state["team_history"]
-            return {"next_worker": DONE, "report": work_text(history), "latest": history[-1][1] if history else ""}
+            return {"next_worker": DONE, "report": work_text(state["team_history"])}
         return {"next_worker": choice}
 
     def make_member(worker: str):
@@ -166,16 +195,15 @@ def build_graph(llm: BaseChatModel | None = None):
     def ceo(state: State):
         choice = ceo_decide(state["task"], state["history"], state["turns"], llm)
         if choice == FINISH:
-            return {"next_team": FINISH, "answer": state.get("latest") or NO_ANSWER}
+            return {"next_team": FINISH, "answer": company_text(state["history"]) if state["history"] else NO_ANSWER}
         return {"next_team": choice}
 
     def make_team_node(team: str):
         def run_team(state: State):
             # the team graph has its own state schema, so the parent calls it and maps the result back
-            out = team_graphs[team].invoke({"task": state["task"], "company": work_text(state["history"]),
+            out = team_graphs[team].invoke({"task": state["task"], "company": company_text(state["history"]),
                                             "team_history": [], "worker_turns": 0})
-            update = {"history": [(team, out["report"])], "turns": state["turns"] + 1}
-            return {**update, "latest": out["latest"]} if out.get("latest") else update
+            return {"history": [(team, out["report"])], "turns": state["turns"] + 1}
         return run_team
 
     g = StateGraph(State)
@@ -189,8 +217,8 @@ def build_graph(llm: BaseChatModel | None = None):
     return g.compile()
 
 
-EXAMPLE_INPUT = {"task": "Plan the launch of HydroSmart, our new smart water bottle: who buys it, the price, "
-                         "and the launch line.",
+EXAMPLE_INPUT = {"task": "Launch Smart Reminders, a new feature in TaskFlow, our task-management app: "
+                         "design it, build it, market it and sell it.",
                  "history": [], "turns": 0}
 
 if __name__ == "__main__":
