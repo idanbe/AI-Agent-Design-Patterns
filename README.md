@@ -42,6 +42,7 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 | 14  | [Tree of Thoughts](agent_patterns/p14_tree_of_thoughts/README.md)           | Search          | Branch into candidate thoughts, score, prune, search (BFS/beam)          | 10          | Puzzles/planning where partial steps can be scored         | Simple Q&A; no way to score intermediate steps                     |
 | 15  | [LATS](agent_patterns/p15_lats/README.md)                                   | Search          | MCTS over real actions: LLM scores branches, failed paths write lessons, search backtracks | 9           | Agent tasks with real feedback where retrying paths is safe | Real-time chat; irreversible actions without a sandbox             |
 | 16  | [Supervisor](agent_patterns/p16_supervisor/README.md)                       | Multi-agent     | A boss LLM picks which specialist agent acts next, loops until FINISH                      | 7           | Specialist agents; next step depends on the last result     | Fixed steps (use chaining); one agent is enough                    |
+| 17  | [Hierarchical teams](agent_patterns/p17_hierarchical_teams/README.md)       | Multi-agent     | A top boss picks teams; each team lead runs its own members                                | 13          | Many agents; group them into teams with their own leads     | A few agents (one Supervisor is enough); low latency               |
 
 \* LLM calls in the repo's mock example — a rough cost/latency signal.
 
@@ -51,7 +52,7 @@ Pick another model with `OPENROUTER_MODEL` (default `anthropic/claude-haiku-5.5`
 - **Workflows** (07–11) — the flow is fixed in code and LLM calls fill in the steps.
 - **Self-correction** (04 Reflexion, 05 Self-Refine, 13 Chain-of-Verification) — check the output and improve it.
 - **Search** (14 Tree of Thoughts, 15 LATS) — explore several reasoning or action paths and prune the weak ones.
-- **Multi-agent** (16 Supervisor) — several specialist agents, each with its own prompt and tools, coordinated.
+- **Multi-agent** (16 Supervisor, 17 Hierarchical teams) — several specialist agents, each with its own prompt and tools, coordinated.
 
 Start with the simplest workflow that works; reach for an agent only when the steps can't be known up front.
 
@@ -68,6 +69,7 @@ flowchart TD
     X -->|real actions| LATS["LATS"]
     S -->|agent team| MA{"How do agents<br/>coordinate?"}
     MA -->|central boss| SUP["Supervisor"]
+    MA -->|teams of teams| HT["Hierarchical<br/>teams"]
 
     W -->|fixed sequence| PC["Prompt chaining"]
     W -->|pick one path| RT["Routing"]
@@ -104,3 +106,4 @@ flowchart TD
 - Hard puzzle/planning where partial steps can be scored → [Tree of Thoughts](agent_patterns/p14_tree_of_thoughts/README.md)
 - Agent actions with real feedback, worth trying several paths and backing up → [LATS](agent_patterns/p15_lats/README.md)
 - Several specialist agents, a boss picks who acts next → [Supervisor](agent_patterns/p16_supervisor/README.md)
+- Too many agents for one boss: teams with their own leads → [Hierarchical teams](agent_patterns/p17_hierarchical_teams/README.md)
